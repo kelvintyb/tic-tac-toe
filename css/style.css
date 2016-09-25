@@ -8,7 +8,10 @@
   box-sizing: border-box;
 }
 
-
+/*section{
+  background-image: url('assets/img/comicbackground.jpg');
+  background-size: cover;
+}*/
 
 .gameboard {
   margin: 20px auto;
@@ -26,6 +29,11 @@
 .tickScore{
   color: darkblue;
 }
+.tickScore img{
+  width: 15em;
+  height: 15em;
+}
+
 .tickhighlight:hover{
   background-color: steelblue;
   border: solid 0.2em darkblue;
@@ -34,6 +42,11 @@
 .thorScore{
   color:darkred;
   padding: 0em 0em 4em 0em;
+}
+
+.thorScore img{
+  width: 15em;
+  height: 15em;
 }
 .thorhighlight:hover{
   background-color: #5f0e0e;
@@ -45,6 +58,8 @@
 .gameboard img{
   height: 6em;
   width: 6em;
+  position: relative;
+  left: 0.2em
 }
 
 .one{
