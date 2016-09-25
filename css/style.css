@@ -1,0 +1,97 @@
+/*.text-center {
+  text-align: center;
+}*/
+
+*, *::before, *::after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+
+
+.gameboard {
+  margin: 20px auto;
+  height: 20em;
+  width: 20em;
+}
+
+.gameboard > div {
+  width: 33.33%;
+  height: 33.33%;
+  float: left;
+  display: inline-block;
+}
+
+.tickScore{
+  color: darkblue;
+}
+.tickhighlight:hover{
+  background-color: steelblue;
+  border: solid 0.2em darkblue;
+}
+
+.thorScore{
+  color:darkred;
+  padding: 0em 0em 4em 0em;
+}
+.thorhighlight:hover{
+  background-color: #5f0e0e;
+  border: solid 0.2em darkred;
+}
+
+
+/*consider adding centering style for img - note that margin auto does not work since parent is floated*/
+.gameboard img{
+  height: 6em;
+  width: 6em;
+}
+
+.one{
+  border-right:solid 0.2em black;
+  border-bottom:solid 0.2em black;
+}
+
+.two{
+  border-right:solid 0.2em black;
+  border-bottom:solid 0.2em black;
+  border-left:solid 0.2em black;
+}
+.three{
+  border-bottom:solid 0.2em black;
+  border-left:solid 0.2em black;
+}
+.four{
+  border-top:solid 0.2em black;
+  border-right:solid 0.2em black;
+  border-bottom:solid 0.2em black;
+}
+.five{
+  border:solid 0.2em black;
+}
+.six{
+  border-top:solid 0.2em black;
+  border-bottom:solid 0.2em black;
+  border-left:solid 0.2em black;
+}
+.seven{
+  border-top:solid 0.2em black;
+  border-right:solid 0.2em black;
+}
+.eight{
+  border-top:solid 0.2em black;
+  border-right:solid 0.2em black;
+  border-left:solid 0.2em black;
+}
+.nine{
+  border-top:solid 0.2em black;
+  border-left:solid 0.2em black;
+}
+
+footer{
+  background: black;
+}
+
+h4{
+  colour:white;
+}
