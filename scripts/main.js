@@ -19,9 +19,16 @@ function Game() {
 
 }
 
+function insertImg(currGame, currSquare) {
+  if (currGame.playerTurn == 1) {
+    currSquare.innerHTML = '<img src="assets/img/tickSquare.jpg" alt="" />'
+  } else {
+    currSquare.innerHTML = '<img src="assets/img/thorSquare.png" alt="" />'
+  }
+}
 
 
-function microWinCheck(currGame, thisObj) {
+function microWinCheck(currGame) {
   var gameboard = currGame.gameboard;
   var row1 = gameboard['one'] + gameboard['two'] + gameboard['three'];
   var row2 = gameboard['four'] + gameboard['five'] + gameboard['six'];
@@ -42,8 +49,6 @@ function microWinCheck(currGame, thisObj) {
   } else if (currGame.moveCounter == 9) {
     alert('There is no spoon.')
   }
-  console.log(tickScore);
-  console.log(thorScore)
 }
 
 function metaWinCheck() {}
@@ -58,15 +63,10 @@ function resetMicro() {
 
 }
 
-function insertImg(currGame, currSquare) {
-  if (currGame.playerTurn == 1) {
-    currSquare.innerHTML = '<img src="assets/img/tickSquare.jpg" alt="" />'
-  } else {
-    currSquare.innerHTML = '<img src="assets/img/thorSquare.png" alt="" />'
-  }
-}
+
 
 function switchPlayer(currGame, currSquare) {
+  console.log(currGame.playerTurn);
   if (currGame.playerTurn == 1) {
     $('.square').removeClass('tickhover');
     $('.square').addClass('thorhover');
@@ -91,8 +91,6 @@ $(document).ready(function() {
   //initFunc() => 1) draw skeleton, 2) draw gameboard html elements **this part needs modularising & its inverse for resetBoard();, 3)draw scoreboards, 4)draw instructions
   $('.square').addClass('tickhover'); //initialise hover styling on all squares
 
-
-
   // create new Game object to initialise new tracking of microGame
   var currGame = new Game();
 
@@ -106,8 +104,6 @@ $(document).ready(function() {
 
   // set click eventHandler on all squares;
   $('.square').one('click', function() {
-
-    console.log(this);
     console.log('Ah you clicked me!')
 
     //  increment moveCounter;
@@ -126,7 +122,7 @@ $(document).ready(function() {
     // console.log(currGame.gameboard[key]);
 
     //CHECK FOR WINNING CONDITION
-    microWinCheck(currGame, that);
+    microWinCheck(currGame);
     console.log(tickScore);
     console.log(thorScore);
     //switch player and change hover effects
