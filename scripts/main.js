@@ -16,6 +16,9 @@ function Game() {
     eight: null,
     nine: null
   };
+}
+
+function metaGame() {
 
 }
 
@@ -42,10 +45,10 @@ function microWinCheck(currGame) {
 
   if (winArray.filter(num => num == 15).length > 0) {
     alert('Tick Won')
-      // tickScore += 1;
+    window.tickScore += 1;
   } else if (winArray.filter(num => num == 30).length > 0) {
     alert('Thor Won')
-      // thorScore += 1;
+    window.thorScore += 1;
   } else if (currGame.moveCounter == 9) {
     alert('There is no spoon.')
   }
@@ -66,16 +69,15 @@ function resetMicro() {
 
 
 function switchPlayer(currGame, currSquare) {
-  console.log(currGame.playerTurn);
   if (currGame.playerTurn == 1) {
-    $('.square').removeClass('tickhover');
-    $('.square').addClass('thorhover');
-    $(currSquare).removeClass('thorhover');
+    $(currSquare).removeClass('tickhover');
+    $('.tickhover').addClass('thorhover');
+    $('.thorhover').removeClass('tickhover');
     currGame.playerTurn = 2;
   } else {
-    $('.square').removeClass('thorhover');
-    $('.square').addClass('tickhover');
-    $(currSquare).removeClass('tickhover');
+    $(currSquare).removeClass('thorhover');
+    $('.thorhover').addClass('tickhover');
+    $('.tickhover').removeClass('thorhover');
     currGame.playerTurn = 1;
   }
 }
@@ -83,10 +85,12 @@ function switchPlayer(currGame, currSquare) {
 
 //note: don't use load within this ready method.
 $(document).ready(function() {
+
   console.log('DOM is ready to rock & roll')
   var numOfGames = 0; // once this hits 10, should alert & reset - BONUS functionality
   var tickScore = 0;
   var thorScore = 0;
+  console.log(this.thorScore);
 
   //initFunc() => 1) draw skeleton, 2) draw gameboard html elements **this part needs modularising & its inverse for resetBoard();, 3)draw scoreboards, 4)draw instructions
   $('.square').addClass('tickhover'); //initialise hover styling on all squares
