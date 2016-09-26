@@ -21,7 +21,7 @@ function Game() {
 
 
 
-function microWinCheck(currGame) {
+function microWinCheck(currGame, thisObj) {
   var gameboard = currGame.gameboard;
   var row1 = gameboard['one'] + gameboard['two'] + gameboard['three'];
   var row2 = gameboard['four'] + gameboard['five'] + gameboard['six'];
@@ -35,11 +35,15 @@ function microWinCheck(currGame) {
 
   if (winArray.filter(num => num == 15).length > 0) {
     alert('Tick Won')
+      // tickScore += 1;
   } else if (winArray.filter(num => num == 30).length > 0) {
     alert('Thor Won')
+      // thorScore += 1;
   } else if (currGame.moveCounter == 9) {
     alert('There is no spoon.')
   }
+  console.log(tickScore);
+  console.log(thorScore)
 }
 
 function metaWinCheck() {}
@@ -80,14 +84,16 @@ function switchPlayer(currGame, currSquare) {
 //note: don't use load within this ready method.
 $(document).ready(function() {
   console.log('DOM is ready to rock & roll')
-    //initFunc() => 1) draw skeleton, 2) draw gameboard html elements **this part needs modularising & its inverse for resetBoard();, 3)draw scoreboards, 4)draw instructions
-  $('.square').addClass('tickhover'); //initialise hover styling on all squares
-
   var numOfGames = 0; // once this hits 10, should alert & reset - BONUS functionality
   var tickScore = 0;
   var thorScore = 0;
 
-  // create new Game object to initialise new tracking of microGame on micro
+  //initFunc() => 1) draw skeleton, 2) draw gameboard html elements **this part needs modularising & its inverse for resetBoard();, 3)draw scoreboards, 4)draw instructions
+  $('.square').addClass('tickhover'); //initialise hover styling on all squares
+
+
+
+  // create new Game object to initialise new tracking of microGame
   var currGame = new Game();
 
   //test written below shows that I shouldn't preassign variables to assess currGame keys since the var won't mutate when I create new constructors later.
@@ -120,10 +126,12 @@ $(document).ready(function() {
     // console.log(currGame.gameboard[key]);
 
     //CHECK FOR WINNING CONDITION
-    microWinCheck(currGame);
-
+    microWinCheck(currGame, that);
+    console.log(tickScore);
+    console.log(thorScore);
     //switch player and change hover effects
     switchPlayer(currGame, this);
+
   })
 
 
