@@ -34,9 +34,10 @@
   height: 15em;
 }
 
-.tickhighlight:hover{
+.tickhover:hover{
   background-color: steelblue;
   border: solid 0.2em darkblue;
+  cursor:pointer;
 }
 
 .thorScore{
@@ -48,9 +49,10 @@
   width: 15em;
   height: 15em;
 }
-.thorhighlight:hover{
+.thorhover:hover{
   background-color: #5f0e0e;
   border: solid 0.2em darkred;
+  cursor: pointer;
 }
 
 
@@ -61,6 +63,8 @@
   position: relative;
   left: 0.2em
 }
+
+
 
 .one{
   border-right:solid 0.2em black;

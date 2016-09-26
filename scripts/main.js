@@ -3,15 +3,43 @@ console.log('hello world, HTML is crowning.')
 
 //constructor function for the game
 function Game() {
-  this.currPlayer = 'The Tick';
+  this.playerTurn = 1; // so if this.currPlayer % 2 = 1 , then it's theTick, otherwise it's Thor
   this.moveCounter = 0;
-  this.tickBoard = {};
-  this.thorBoard = {};
+  this.gameboard = {
+    one: null,
+    two: null,
+    three: null,
+    four: null,
+    five: null,
+    six: null,
+    seven: null,
+    eight: null,
+    nine: null
+  };
+
 }
 
 
-function microWinCheck() {
 
+function microWinCheck(currGame) {
+  var gameboard = currGame.gameboard;
+  var row1 = gameboard['one'] + gameboard['two'] + gameboard['three'];
+  var row2 = gameboard['four'] + gameboard['five'] + gameboard['six'];
+  var row3 = gameboard['seven'] + gameboard['eight'] + gameboard['nine'];
+  var col1 = gameboard['one'] + gameboard['four'] + gameboard['seven'];
+  var col2 = gameboard['two'] + gameboard['five'] + gameboard['eight'];
+  var col3 = gameboard['three'] + gameboard['six'] + gameboard['nine'];
+  var diag1 = gameboard['one'] + gameboard['five'] + gameboard['nine'];
+  var diag2 = gameboard['seven'] + gameboard['five'] + gameboard['three'];
+  var winArray = [row1, row2, row3, col1, col2, col3, diag1, diag2];
+
+  if (winArray.filter(num => num == 15).length > 0) {
+    alert('Tick Won')
+  } else if (winArray.filter(num => num == 30).length > 0) {
+    alert('Thor Won')
+  } else if (currGame.moveCounter == 9) {
+    alert('There is no spoon.')
+  }
 }
 
 function metaWinCheck() {}
@@ -26,18 +54,34 @@ function resetMicro() {
 
 }
 
-function switchSqClass() {
-
+function insertImg(currGame, currSquare) {
+  if (currGame.playerTurn == 1) {
+    currSquare.innerHTML = '<img src="assets/img/tickSquare.jpg" alt="" />'
+  } else {
+    currSquare.innerHTML = '<img src="assets/img/thorSquare.png" alt="" />'
+  }
 }
 
+function switchPlayer(currGame, currSquare) {
+  if (currGame.playerTurn == 1) {
+    $('.square').removeClass('tickhover');
+    $('.square').addClass('thorhover');
+    $(currSquare).removeClass('thorhover');
+    currGame.playerTurn = 2;
+  } else {
+    $('.square').removeClass('thorhover');
+    $('.square').addClass('tickhover');
+    $(currSquare).removeClass('tickhover');
+    currGame.playerTurn = 1;
+  }
+}
 
 
 //note: don't use load within this ready method.
 $(document).ready(function() {
   console.log('DOM is ready to rock & roll')
     //initFunc() => 1) draw skeleton, 2) draw gameboard html elements **this part needs modularising & its inverse for resetBoard();, 3)draw scoreboards, 4)draw instructions
-  $('.square').addClass('tickhighlight');
-
+  $('.square').addClass('tickhover'); //initialise hover styling on all squares
 
   var numOfGames = 0; // once this hits 10, should alert & reset - BONUS functionality
   var tickScore = 0;
@@ -56,19 +100,36 @@ $(document).ready(function() {
 
   // set click eventHandler on all squares;
   $('.square').one('click', function() {
-      console.log('Ah you clicked me!')
-        //check which class to remove from the square once clicked to stop it from lighting up;
 
-      currGame.moveCounter += 1;
-      console.log(currGame.moveCounter);
-    })
-    //  onclick =>
+    console.log(this);
+    console.log('Ah you clicked me!')
+
     //  increment moveCounter;
-    //  if game.playerTurn = tick ? update tickBoard, insert tick image : thorBoard, insert thor img
-    //   microWinCheck() => check for win or draw; if win {increment score of currPlayer, resetBoard()) if draw=> moveCounter == 9, resetBoard(), create new Game;else
-    //  update playerTurn
-    //  switch class of clickers   //pattern to switch classes: $('p').removeClass('red').addClass('green');
-    //
-    //  metaWinCheck() => if score of currPlayer == 3, alert the win and reload location then break;alternatively ajax load a starter.html + reset global variables to 0;
+    currGame.moveCounter += 1;
+    // console.log(currGame.moveCounter);
+
+    //// INSERT IMAGE
+    insertImg(currGame, this);
+
+    ////UPDATE THE GAMEBOARD
+    var key = this.classList[1] //getting the right key
+      // console.log(key);
+    var value = $(this).attr('value') * currGame.playerTurn;
+    // console.log($(this).attr('value'))
+    currGame.gameboard[key] = value;
+    // console.log(currGame.gameboard[key]);
+
+    //CHECK FOR WINNING CONDITION
+    microWinCheck(currGame);
+
+    //switch player and change hover effects
+    switchPlayer(currGame, this);
+  })
+
+
+  //  onclick =>
+  //   microWinCheck() => check for win or draw; if win {increment score of currPlayer, resetBoard()) if draw=> moveCounter == 9, resetBoard(), create new Game;else
+  //  metaWinCheck() => if score of currPlayer == 3, alert the win and reload location then break;alternatively ajax load a starter.html + reset global variables to 0;
+  //switchPlayer()
 
 })
