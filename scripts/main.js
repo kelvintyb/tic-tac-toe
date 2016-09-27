@@ -6,6 +6,8 @@ console.log('hello world, HTML is crowning.')
 // create new global variables to initialise new tracking of metaGame/microGame
 var currGame = new Game();
 var meta = new Meta();
+var numOfGames = 0; // once this hits 10, should alert & reset - BONUS functionality
+
 $('.square').addClass('tickhover'); //initialise hover styling on all squares
 
 
@@ -70,9 +72,9 @@ function resetMicro() {
   $('.square').removeClass('tickhover');
   $('.square').removeClass('thorhover');
   $('.square').addClass('tickhover');
-
+  $('.square').off('click', clickHandler);
+  $('.square').one('click', clickHandler);
   //remove all eventlisteners + add eventlistener
-  // $('.square').off('click',)
 }
 
 // functions to check if the current game is won or if either player has won the series
@@ -91,7 +93,7 @@ function microWinCheck(currGame) {
   //ON WIN OR DRAW: update score, reset imgs
   if (winArray.filter(num => num == 15).length > 0) {
     //update score
-    //reset gameboard
+    //reset microgame => reset event listeners and hover effects
     //change class to animate fade-in colours!! or use audio clip
     meta.tickScore += 1
     $('#tickscorebox').text(meta.tickScore)
@@ -104,6 +106,29 @@ function microWinCheck(currGame) {
     setTimeout(resetMicro, 500);
   }
 }
+
+function clickHandler() {
+  console.log('Ah you clicked me!')
+
+  //  increment moveCounter;
+  currGame.moveCounter += 1;
+  // console.log(currGame.moveCounter);
+
+  //// INSERT IMAGE
+  insertImg(currGame, this);
+
+  ////UPDATE THE GAMEBOARD
+  var key = this.classList[1] //getting the right key
+  var value = $(this).attr('value') * currGame.playerTurn;
+  currGame.gameboard[key] = value;
+
+  //CHECK FOR WINNING CONDITION
+  microWinCheck(currGame);
+
+  //switch player and change hover effects
+  switchPlayer(currGame, this);
+}
+
 
 function metaWinCheck() {
 
@@ -118,7 +143,6 @@ function resetMeta() {
 //note: don't use load within this ready method.
 $(document).ready(function() {
   console.log('DOM is ready to rock & roll')
-  var numOfGames = 0; // once this hits 10, should alert & reset - BONUS functionality
 
   //initFunc() => 1) draw skeleton, 2) draw gameboard html elements **this part needs modularising & its inverse for resetBoard();, 3)draw scoreboards, 4)draw instructions
 
@@ -131,28 +155,7 @@ $(document).ready(function() {
   // var currGame = new Game();
   // console.log(moveCounter);
 
-  //set click eventHandler on all squares;BUG note that if we define this as clickHandler outside of this scope, likely will run into bug where switchPlayer does not execute properly and insertImg never calls the right one;
-  $('.square').one('click', function() {
-    console.log('Ah you clicked me!')
-
-    //  increment moveCounter;
-    currGame.moveCounter += 1;
-    // console.log(currGame.moveCounter);
-
-    //// INSERT IMAGE
-    insertImg(currGame, this);
-
-    ////UPDATE THE GAMEBOARD
-    var key = this.classList[1] //getting the right key
-    var value = $(this).attr('value') * currGame.playerTurn;
-    currGame.gameboard[key] = value;
-
-    //CHECK FOR WINNING CONDITION
-    microWinCheck(currGame);
-
-    //switch player and change hover effects
-    switchPlayer(currGame, this);
-  })
+  $('.square').one('click', clickHandler)
 
 
   //  onclick =>
