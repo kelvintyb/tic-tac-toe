@@ -1,7 +1,16 @@
 console.log('hello world, HTML is crowning.')
-  //Note: Any reference made with the prefix micro refers to the current tic-tac-toe game being played, prefix meta refers to the overall game series
+  //README: Any reference made with the prefix micro refers to the current tic-tac-toe game being played, prefix meta refers to the overall game series
 
-//constructor function for the game
+//init function for html
+
+// create new global variables to initialise new tracking of metaGame/microGame
+var currGame = new Game();
+var meta = new Meta();
+$('.square').addClass('tickhover'); //initialise hover styling on all squares
+
+
+
+//constructor functions for the game & metaGame
 function Game() {
   this.playerTurn = 1; // so if this.currPlayer % 2 = 1 , then it's theTick, otherwise it's Thor
   this.moveCounter = 0;
@@ -18,10 +27,16 @@ function Game() {
   };
 }
 
-function metaGame() {
 
+function Meta() {
+  this.thorScore = 0;
+  this.tickScore = 0;
 }
 
+
+
+
+// helper functions to insert images into squares and for updating CSS when switching players
 function insertImg(currGame, currSquare) {
   if (currGame.playerTurn == 1) {
     currSquare.innerHTML = '<img src="assets/img/tickSquare.jpg" alt="" />'
@@ -29,43 +44,6 @@ function insertImg(currGame, currSquare) {
     currSquare.innerHTML = '<img src="assets/img/thorSquare.png" alt="" />'
   }
 }
-
-
-function microWinCheck(currGame) {
-  var gameboard = currGame.gameboard;
-  var row1 = gameboard['one'] + gameboard['two'] + gameboard['three'];
-  var row2 = gameboard['four'] + gameboard['five'] + gameboard['six'];
-  var row3 = gameboard['seven'] + gameboard['eight'] + gameboard['nine'];
-  var col1 = gameboard['one'] + gameboard['four'] + gameboard['seven'];
-  var col2 = gameboard['two'] + gameboard['five'] + gameboard['eight'];
-  var col3 = gameboard['three'] + gameboard['six'] + gameboard['nine'];
-  var diag1 = gameboard['one'] + gameboard['five'] + gameboard['nine'];
-  var diag2 = gameboard['seven'] + gameboard['five'] + gameboard['three'];
-  var winArray = [row1, row2, row3, col1, col2, col3, diag1, diag2];
-
-  if (winArray.filter(num => num == 15).length > 0) {
-    alert('Tick Won')
-    window.tickScore += 1;
-  } else if (winArray.filter(num => num == 30).length > 0) {
-    alert('Thor Won')
-    window.thorScore += 1;
-  } else if (currGame.moveCounter == 9) {
-    alert('There is no spoon.')
-  }
-}
-
-function metaWinCheck() {}
-
-
-
-function resetMeta() {
-  return 'hi'
-} //try out ajax load in here to be used when resetting meta
-
-function resetMicro() {
-
-}
-
 
 
 function switchPlayer(currGame, currSquare) {
@@ -83,20 +61,67 @@ function switchPlayer(currGame, currSquare) {
 }
 
 
+function resetMicro() {
+  // currGame = new Game(); or figure out a way to change gameboard
+  currGame = new Game();
+
+  console.log(currGame.gameboard)
+  $('.square').html('');
+  $('.square').removeClass('tickhover');
+  $('.square').removeClass('thorhover');
+  $('.square').addClass('tickhover');
+
+  //remove all eventlisteners + add eventlistener
+  // $('.square').off('click',)
+}
+
+// functions to check if the current game is won or if either player has won the series
+function microWinCheck(currGame) {
+  var gameboard = currGame.gameboard;
+  var row1 = gameboard['one'] + gameboard['two'] + gameboard['three'];
+  var row2 = gameboard['four'] + gameboard['five'] + gameboard['six'];
+  var row3 = gameboard['seven'] + gameboard['eight'] + gameboard['nine'];
+  var col1 = gameboard['one'] + gameboard['four'] + gameboard['seven'];
+  var col2 = gameboard['two'] + gameboard['five'] + gameboard['eight'];
+  var col3 = gameboard['three'] + gameboard['six'] + gameboard['nine'];
+  var diag1 = gameboard['one'] + gameboard['five'] + gameboard['nine'];
+  var diag2 = gameboard['seven'] + gameboard['five'] + gameboard['three'];
+  var winArray = [row1, row2, row3, col1, col2, col3, diag1, diag2];
+
+  //ON WIN OR DRAW: update score, reset imgs
+  if (winArray.filter(num => num == 15).length > 0) {
+    //update score
+    //reset gameboard
+    //change class to animate fade-in colours!! or use audio clip
+    meta.tickScore += 1
+    $('#tickscorebox').text(meta.tickScore)
+    setTimeout(resetMicro, 500);
+  } else if (winArray.filter(num => num == 30).length > 0) {
+    meta.thorScore += 1
+    $('#thorscorebox').text(meta.thorScore)
+    setTimeout(resetMicro, 500);
+  } else if (currGame.moveCounter == 9) {
+    setTimeout(resetMicro, 500);
+  }
+}
+
+function metaWinCheck() {
+
+}
+
+function resetMeta() {
+
+} //try out ajax load in here to be used when resetting meta
+
+
+
 //note: don't use load within this ready method.
 $(document).ready(function() {
-
   console.log('DOM is ready to rock & roll')
   var numOfGames = 0; // once this hits 10, should alert & reset - BONUS functionality
-  var tickScore = 0;
-  var thorScore = 0;
-  console.log(this.thorScore);
 
   //initFunc() => 1) draw skeleton, 2) draw gameboard html elements **this part needs modularising & its inverse for resetBoard();, 3)draw scoreboards, 4)draw instructions
-  $('.square').addClass('tickhover'); //initialise hover styling on all squares
 
-  // create new Game object to initialise new tracking of microGame
-  var currGame = new Game();
 
   //test written below shows that I shouldn't preassign variables to assess currGame keys since the var won't mutate when I create new constructors later.
   // var moveCounter = currGame.moveCounter;
@@ -106,7 +131,7 @@ $(document).ready(function() {
   // var currGame = new Game();
   // console.log(moveCounter);
 
-  // set click eventHandler on all squares;
+  //set click eventHandler on all squares;BUG note that if we define this as clickHandler outside of this scope, likely will run into bug where switchPlayer does not execute properly and insertImg never calls the right one;
   $('.square').one('click', function() {
     console.log('Ah you clicked me!')
 
@@ -119,19 +144,14 @@ $(document).ready(function() {
 
     ////UPDATE THE GAMEBOARD
     var key = this.classList[1] //getting the right key
-      // console.log(key);
     var value = $(this).attr('value') * currGame.playerTurn;
-    // console.log($(this).attr('value'))
     currGame.gameboard[key] = value;
-    // console.log(currGame.gameboard[key]);
 
     //CHECK FOR WINNING CONDITION
     microWinCheck(currGame);
-    console.log(tickScore);
-    console.log(thorScore);
+
     //switch player and change hover effects
     switchPlayer(currGame, this);
-
   })
 
 
